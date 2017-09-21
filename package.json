@@ -19,6 +19,7 @@
     "url": "https://github.com/chafey/cornerstoneWADOImageLoader.git"
   },
   "scripts": {
+    "ahaha": "node versionChecker.js",
     "eslint": "eslint -c .eslintrc.js src",
     "eslint-quiet": "eslint -c .eslintrc.js --quiet src",
     "eslint-fix": "eslint -c .eslintrc.js --fix src",
@@ -78,6 +79,7 @@
   "dependencies": {
     "cornerstone-core": "^0.12.2",
     "dicom-parser": "^1.7.4",
-    "jquery": "^2.2.4"
+    "jquery": "^2.2.4",
+    "semver": "^5.4.1"
   }
 }
