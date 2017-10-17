@@ -77,7 +77,7 @@
     "webpack": "^2.4.1"
   },
   "dependencies": {
-    "cornerstone-core": "^0.12.2",
+    "cornerstone-core": "^0.13.0",
     "dicom-parser": "^1.7.4",
     "jquery": "^2.2.4"
   }
