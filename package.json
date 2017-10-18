@@ -75,7 +75,7 @@
     "shx": "^0.2.2",
     "uglify-js": "^3.0.7",
     "webpack": "^2.4.1",
-    "cornerstone-core": "^0.13.0",
+    "cornerstone-core": "^0.13.0"
   },
   "dependencies": {
     "dicom-parser": "^1.7.4",
