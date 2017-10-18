@@ -1,14 +1,14 @@
-/*! cornerstone-wado-image-loader - 0.14.7 - 2017-10-13 | (c) 2016 Chris Hafey | https://github.com/chafey/cornerstoneWADOImageLoader */
+/*! cornerstone-wado-image-loader - 0.14.7 - 2017-10-18 | (c) 2016 Chris Hafey | https://github.com/chafey/cornerstoneWADOImageLoader */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("cornerstone-core"), require("dicom-parser"), require("jquery"));
+		module.exports = factory(require("dicom-parser"), require("jquery"));
 	else if(typeof define === 'function' && define.amd)
-		define("cornerstoneWADOImageLoader", ["cornerstone-core", "dicom-parser", "jquery"], factory);
+		define("cornerstoneWADOImageLoader", ["dicom-parser", "jquery"], factory);
 	else if(typeof exports === 'object')
-		exports["cornerstoneWADOImageLoader"] = factory(require("cornerstone-core"), require("dicom-parser"), require("jquery"));
+		exports["cornerstoneWADOImageLoader"] = factory(require("dicom-parser"), require("jquery"));
 	else
-		root["cornerstoneWADOImageLoader"] = factory(root["cornerstone"], root["dicomParser"], root["$"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_60__, __WEBPACK_EXTERNAL_MODULE_61__, __WEBPACK_EXTERNAL_MODULE_62__) {
+		root["cornerstoneWADOImageLoader"] = factory(root["dicomParser"], root["$"]);
+})(this, function(__WEBPACK_EXTERNAL_MODULE_60__, __WEBPACK_EXTERNAL_MODULE_61__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -87,17 +87,13 @@ return /******/ (function(modules) { // webpackBootstrap
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.dicomParser = exports.cornerstone = exports.$ = undefined;
+exports.dicomParser = exports.getCornerstone = exports.setCornerstone = exports.cornerstone = exports.$ = undefined;
 
-var _jquery = __webpack_require__(62);
+var _jquery = __webpack_require__(61);
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
-var _cornerstoneCore = __webpack_require__(60);
-
-var cornerstone = _interopRequireWildcard(_cornerstoneCore);
-
-var _dicomParser = __webpack_require__(61);
+var _dicomParser = __webpack_require__(60);
 
 var dicomParser = _interopRequireWildcard(_dicomParser);
 
@@ -105,8 +101,20 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var cornerstone = void 0;
+
+function setCornerstone(cs) {
+  exports.cornerstone = cornerstone = cs;
+}
+
+function getCornerstone() {
+  return cornerstone;
+}
+
 exports.$ = _jquery2.default;
 exports.cornerstone = cornerstone;
+exports.setCornerstone = setCornerstone;
+exports.getCornerstone = getCornerstone;
 exports.dicomParser = dicomParser;
 
 /***/ }),
@@ -2545,6 +2553,10 @@ function xhrRequest(url, imageId) {
       xhr.setRequestHeader(key, headers[key]);
     });
 
+    params.deferred = {
+      resolve: resolve,
+      reject: reject
+    };
     params.url = url;
     params.imageId = imageId;
 
@@ -3304,12 +3316,6 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_60__;
 /***/ (function(module, exports) {
 
 module.exports = __WEBPACK_EXTERNAL_MODULE_61__;
-
-/***/ }),
-/* 62 */
-/***/ (function(module, exports) {
-
-module.exports = __WEBPACK_EXTERNAL_MODULE_62__;
 
 /***/ })
 /******/ ]);
