@@ -1,4 +1,4 @@
-import { cornerstone, dicomParser } from '../../../externalModules.js';
+import { external, dicomParser } from '../../../externalModules.js';
 import getNumberValues from './getNumberValues.js';
 import parseImageId from '../parseImageId.js';
 import dataSetCacheManager from '../dataSetCacheManager.js';
@@ -98,7 +98,9 @@ function metaDataProvider (type, imageId) {
 
 }
 
-// register our metadata provider
-cornerstone.metaData.addProvider(metaDataProvider);
+function addMetaDataProvider (cornerstone) {
+  // register our metadata provider
+  cornerstone.metaData.addProvider(metaDataProvider);
+}
 
-export default metaDataProvider;
+export { metaDataProvider, addMetaDataProvider };

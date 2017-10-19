@@ -2,12 +2,13 @@ import { getNumberString,
          getNumberValue,
          getNumberValues,
          getValue,
-         metaDataProvider } from './metaData/index.js';
+         metaDataProvider,
+         addMetaDataProvider } from './metaData/index.js';
 
 import findIndexOfString from './findIndexOfString.js';
 import getPixelData from './getPixelData.js';
-import metaDataManager from './metaDataManager.js';
-import loadImage from './loadImage.js';
+import { metaDataManager } from './metaDataManager.js';
+import { loadImage, registerImageLoaders } from './loadImage.js';
 
 const metaData = {
   getNumberString,
@@ -17,10 +18,12 @@ const metaData = {
   metaDataProvider
 };
 
-export default {
+export {
   metaData,
   findIndexOfString,
   getPixelData,
   loadImage,
-  metaDataManager
+  metaDataManager,
+  addMetaDataProvider,
+  registerImageLoaders
 };

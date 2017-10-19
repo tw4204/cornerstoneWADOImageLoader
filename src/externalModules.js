@@ -1,5 +1,15 @@
 import $ from 'jquery';
-import * as cornerstone from 'cornerstone-core';
 import * as dicomParser from 'dicom-parser';
 
-export { $, cornerstone, dicomParser };
+let cornerstone;
+
+const external = {
+  set cornerstone (cs) {
+    cornerstone = cs;
+  },
+  get cornerstone () {
+    return cornerstone;
+  }
+};
+
+export { $, dicomParser, external };

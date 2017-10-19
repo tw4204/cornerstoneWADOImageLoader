@@ -1,7 +1,9 @@
+import { external } from '../externalModules.js';
+import * as wadouri from './wadouri/index.js';
+import * as wadors from './wadors/index.js';
+
 export * from './colorSpaceConverters/index.js';
 
-export { default as wadouri } from './wadouri/index.js';
-export { default as wadors } from './wadors/index.js';
 export { default as configure } from './configure.js';
 export { default as convertColorSpace } from './convertColorSpace.js';
 export { default as createImage } from './createImage.js';
@@ -14,3 +16,13 @@ export { default as isJPEGBaseline8BitColor } from './isJPEGBaseline8BitColor.js
 export { default as webWorkerManager } from './webWorkerManager.js';
 export { default as version } from '../version.js';
 export { internal } from './internal/index.js';
+
+function initialize (cs) {
+  external.cornerstone = cs;
+  wadouri.registerImageLoaders(cs);
+  wadors.registerImageLoaders(cs);
+  wadouri.addMetaDataProvider(cs);
+  wadors.addMetaDataProvider(cs);
+}
+
+export { wadouri, wadors, initialize, external };

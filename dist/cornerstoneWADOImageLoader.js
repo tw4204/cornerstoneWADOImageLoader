@@ -1,14 +1,14 @@
-/*! cornerstone-wado-image-loader - 0.14.7 - 2017-10-13 | (c) 2016 Chris Hafey | https://github.com/chafey/cornerstoneWADOImageLoader */
+/*! cornerstone-wado-image-loader - 0.14.7 - 2017-10-19 | (c) 2016 Chris Hafey | https://github.com/chafey/cornerstoneWADOImageLoader */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("cornerstone-core"), require("dicom-parser"), require("jquery"));
+		module.exports = factory(require("dicom-parser"), require("jquery"));
 	else if(typeof define === 'function' && define.amd)
-		define("cornerstoneWADOImageLoader", ["cornerstone-core", "dicom-parser", "jquery"], factory);
+		define("cornerstoneWADOImageLoader", ["dicom-parser", "jquery"], factory);
 	else if(typeof exports === 'object')
-		exports["cornerstoneWADOImageLoader"] = factory(require("cornerstone-core"), require("dicom-parser"), require("jquery"));
+		exports["cornerstoneWADOImageLoader"] = factory(require("dicom-parser"), require("jquery"));
 	else
-		root["cornerstoneWADOImageLoader"] = factory(root["cornerstone"], root["dicomParser"], root["$"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_60__, __WEBPACK_EXTERNAL_MODULE_61__, __WEBPACK_EXTERNAL_MODULE_62__) {
+		root["cornerstoneWADOImageLoader"] = factory(root["dicomParser"], root["$"]);
+})(this, function(__WEBPACK_EXTERNAL_MODULE_60__, __WEBPACK_EXTERNAL_MODULE_61__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -87,17 +87,13 @@ return /******/ (function(modules) { // webpackBootstrap
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.dicomParser = exports.cornerstone = exports.$ = undefined;
+exports.external = exports.dicomParser = exports.$ = undefined;
 
-var _jquery = __webpack_require__(62);
+var _jquery = __webpack_require__(61);
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
-var _cornerstoneCore = __webpack_require__(60);
-
-var cornerstone = _interopRequireWildcard(_cornerstoneCore);
-
-var _dicomParser = __webpack_require__(61);
+var _dicomParser = __webpack_require__(60);
 
 var dicomParser = _interopRequireWildcard(_dicomParser);
 
@@ -105,9 +101,20 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var cornerstone = void 0;
+
+var external = {
+  set cornerstone(cs) {
+    cornerstone = cs;
+  },
+  get cornerstone() {
+    return cornerstone;
+  }
+};
+
 exports.$ = _jquery2.default;
-exports.cornerstone = cornerstone;
 exports.dicomParser = dicomParser;
+exports.external = external;
 
 /***/ }),
 /* 1 */
@@ -298,10 +305,11 @@ function createImage(imageId, pixelData, transferSyntax, options) {
 
   return new Promise(function (resolve, reject) {
     decodePromise.then(function (imageFrame) {
-      var imagePlaneModule = _externalModules.cornerstone.metaData.get('imagePlaneModule', imageId) || {};
-      var voiLutModule = _externalModules.cornerstone.metaData.get('voiLutModule', imageId) || {};
-      var modalityLutModule = _externalModules.cornerstone.metaData.get('modalityLutModule', imageId) || {};
-      var sopCommonModule = _externalModules.cornerstone.metaData.get('sopCommonModule', imageId) || {};
+      var cornerstone = _externalModules.external.cornerstone;
+      var imagePlaneModule = cornerstone.metaData.get('imagePlaneModule', imageId) || {};
+      var voiLutModule = cornerstone.metaData.get('voiLutModule', imageId) || {};
+      var modalityLutModule = cornerstone.metaData.get('modalityLutModule', imageId) || {};
+      var sopCommonModule = cornerstone.metaData.get('sopCommonModule', imageId) || {};
       var isColorImage = (0, _isColorImage2.default)(imageFrame.photometricInterpretation);
 
       // JPEGBaseline (8 bits) is already returning the pixel data in the right format (rgba)
@@ -358,7 +366,7 @@ function createImage(imageId, pixelData, transferSyntax, options) {
 
       // Setup the renderer
       if (image.color) {
-        image.render = _externalModules.cornerstone.renderColorImage;
+        image.render = cornerstone.renderColorImage;
         image.getCanvas = function () {
           if (lastImageIdDrawn === imageId) {
             return canvas;
@@ -374,7 +382,7 @@ function createImage(imageId, pixelData, transferSyntax, options) {
           return canvas;
         };
       } else {
-        image.render = _externalModules.cornerstone.renderGrayscaleImage;
+        image.render = cornerstone.renderGrayscaleImage;
       }
 
       // Modality LUT
@@ -952,7 +960,7 @@ Object.defineProperty(exports, "__esModule", {
 var _externalModules = __webpack_require__(0);
 
 function getImageFrame(imageId) {
-  var imagePixelModule = _externalModules.cornerstone.metaData.get('imagePixelModule', imageId);
+  var imagePixelModule = _externalModules.external.cornerstone.metaData.get('imagePixelModule', imageId);
 
   return {
     samplesPerPixel: imagePixelModule.samplesPerPixel,
@@ -2075,6 +2083,7 @@ exports.default = configure;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.registerImageLoaders = exports.addMetaDataProvider = exports.metaDataManager = exports.loadImage = exports.getPixelData = exports.findIndexOfString = exports.metaData = undefined;
 
 var _index = __webpack_require__(47);
 
@@ -2088,11 +2097,7 @@ var _getPixelData2 = _interopRequireDefault(_getPixelData);
 
 var _metaDataManager = __webpack_require__(8);
 
-var _metaDataManager2 = _interopRequireDefault(_metaDataManager);
-
 var _loadImage = __webpack_require__(45);
-
-var _loadImage2 = _interopRequireDefault(_loadImage);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2104,13 +2109,13 @@ var metaData = {
   metaDataProvider: _index.metaDataProvider
 };
 
-exports.default = {
-  metaData: metaData,
-  findIndexOfString: _findIndexOfString2.default,
-  getPixelData: _getPixelData2.default,
-  loadImage: _loadImage2.default,
-  metaDataManager: _metaDataManager2.default
-};
+exports.metaData = metaData;
+exports.findIndexOfString = _findIndexOfString2.default;
+exports.getPixelData = _getPixelData2.default;
+exports.loadImage = _loadImage.loadImage;
+exports.metaDataManager = _metaDataManager.metaDataManager;
+exports.addMetaDataProvider = _index.addMetaDataProvider;
+exports.registerImageLoaders = _loadImage.registerImageLoaders;
 
 /***/ }),
 /* 35 */
@@ -2122,6 +2127,7 @@ exports.default = {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.addMetaDataProvider = exports.registerImageLoaders = exports.unpackBinaryFrame = exports.parseImageId = exports.loadImage = exports.getLoaderForScheme = exports.loadImageFromPromise = exports.loadFileRequest = exports.getUncompressedImageFrame = exports.getEncapsulatedImageFrame = exports.fileManager = exports.dataSetCacheManager = exports.metaData = undefined;
 
 var _index = __webpack_require__(50);
 
@@ -2165,19 +2171,19 @@ var metaData = {
   metaDataProvider: _index.metaDataProvider
 };
 
-exports.default = {
-  metaData: metaData,
-  dataSetCacheManager: _dataSetCacheManager2.default,
-  fileManager: _fileManager2.default,
-  getEncapsulatedImageFrame: _getEncapsulatedImageFrame2.default,
-  getUncompressedImageFrame: _getUncompressedImageFrame2.default,
-  loadFileRequest: _loadFileRequest2.default,
-  loadImageFromPromise: _loadImage.loadImageFromPromise,
-  getLoaderForScheme: _loadImage.getLoaderForScheme,
-  loadImage: _loadImage.loadImage,
-  parseImageId: _parseImageId2.default,
-  unpackBinaryFrame: _unpackBinaryFrame2.default
-};
+exports.metaData = metaData;
+exports.dataSetCacheManager = _dataSetCacheManager2.default;
+exports.fileManager = _fileManager2.default;
+exports.getEncapsulatedImageFrame = _getEncapsulatedImageFrame2.default;
+exports.getUncompressedImageFrame = _getUncompressedImageFrame2.default;
+exports.loadFileRequest = _loadFileRequest2.default;
+exports.loadImageFromPromise = _loadImage.loadImageFromPromise;
+exports.getLoaderForScheme = _loadImage.getLoaderForScheme;
+exports.loadImage = _loadImage.loadImage;
+exports.parseImageId = _parseImageId2.default;
+exports.unpackBinaryFrame = _unpackBinaryFrame2.default;
+exports.registerImageLoaders = _loadImage.registerImageLoaders;
+exports.addMetaDataProvider = _index.addMetaDataProvider;
 
 /***/ }),
 /* 36 */,
@@ -2372,6 +2378,7 @@ exports.default = function (imageFrame, rgbaBuffer) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.external = exports.initialize = exports.wadors = exports.wadouri = exports.internal = exports.version = exports.webWorkerManager = exports.isJPEGBaseline8BitColor = exports.isColorImage = exports.getMinMax = exports.getImageFrame = exports.decodeJPEGBaseline8BitColor = exports.decodeImageFrame = exports.createImage = exports.convertColorSpace = exports.configure = undefined;
 
 var _index = __webpack_require__(10);
 
@@ -2383,24 +2390,6 @@ Object.keys(_index).forEach(function (key) {
       return _index[key];
     }
   });
-});
-
-var _index2 = __webpack_require__(35);
-
-Object.defineProperty(exports, 'wadouri', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_index2).default;
-  }
-});
-
-var _index3 = __webpack_require__(34);
-
-Object.defineProperty(exports, 'wadors', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_index3).default;
-  }
 });
 
 var _configure = __webpack_require__(33);
@@ -2502,16 +2491,41 @@ Object.defineProperty(exports, 'version', {
   }
 });
 
-var _index4 = __webpack_require__(1);
+var _index2 = __webpack_require__(1);
 
 Object.defineProperty(exports, 'internal', {
   enumerable: true,
   get: function get() {
-    return _index4.internal;
+    return _index2.internal;
   }
 });
 
+var _externalModules = __webpack_require__(0);
+
+var _index3 = __webpack_require__(35);
+
+var wadouri = _interopRequireWildcard(_index3);
+
+var _index4 = __webpack_require__(34);
+
+var wadors = _interopRequireWildcard(_index4);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function initialize(cs) {
+  _externalModules.external.cornerstone = cs;
+  wadouri.registerImageLoaders(cs);
+  wadors.registerImageLoaders(cs);
+  wadouri.addMetaDataProvider(cs);
+  wadors.addMetaDataProvider(cs);
+}
+
+exports.wadouri = wadouri;
+exports.wadors = wadors;
+exports.initialize = initialize;
+exports.external = _externalModules.external;
 
 /***/ }),
 /* 44 */
@@ -2533,6 +2547,7 @@ function xhrRequest(url, imageId) {
   var params = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
 
   var options = (0, _options.getOptions)();
+  var cornerstone = _externalModules.external.cornerstone;
 
   // Make the request for the DICOM P10 SOP Instance
   return new Promise(function (resolve, reject) {
@@ -2545,6 +2560,10 @@ function xhrRequest(url, imageId) {
       xhr.setRequestHeader(key, headers[key]);
     });
 
+    params.deferred = {
+      resolve: resolve,
+      reject: reject
+    };
     params.url = url;
     params.imageId = imageId;
 
@@ -2556,7 +2575,7 @@ function xhrRequest(url, imageId) {
       }
 
       // Event
-      (0, _externalModules.$)(_externalModules.cornerstone.events).trigger('CornerstoneImageLoadStart', {
+      (0, _externalModules.$)(cornerstone.events).trigger('CornerstoneImageLoadStart', {
         url: url,
         imageId: imageId
       });
@@ -2570,7 +2589,7 @@ function xhrRequest(url, imageId) {
       }
 
       // Event
-      (0, _externalModules.$)(_externalModules.cornerstone.events).trigger('CornerstoneImageLoadEnd', {
+      (0, _externalModules.$)(cornerstone.events).trigger('CornerstoneImageLoadEnd', {
         url: url,
         imageId: imageId
       });
@@ -2615,7 +2634,7 @@ function xhrRequest(url, imageId) {
       }
 
       // Event
-      (0, _externalModules.$)(_externalModules.cornerstone.events).trigger('CornerstoneImageLoadProgress', {
+      (0, _externalModules.$)(cornerstone.events).trigger('CornerstoneImageLoadProgress', {
         url: url,
         imageId: imageId,
         loaded: loaded,
@@ -2640,6 +2659,7 @@ exports.default = xhrRequest;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.registerImageLoaders = exports.loadImage = undefined;
 
 var _externalModules = __webpack_require__(0);
 
@@ -2702,10 +2722,13 @@ function loadImage(imageId, options) {
   return deferred;
 }
 
-// register wadors scheme
-_externalModules.cornerstone.registerImageLoader('wadors', loadImage);
+function registerImageLoaders(cs) {
+  // register wadors scheme
+  cs.registerImageLoader('wadors', loadImage);
+}
 
-exports.default = loadImage;
+exports.loadImage = loadImage;
+exports.registerImageLoaders = registerImageLoaders;
 
 /***/ }),
 /* 46 */
@@ -2796,7 +2819,13 @@ var _metaDataProvider = __webpack_require__(48);
 Object.defineProperty(exports, 'metaDataProvider', {
   enumerable: true,
   get: function get() {
-    return _interopRequireDefault(_metaDataProvider).default;
+    return _metaDataProvider.metaDataProvider;
+  }
+});
+Object.defineProperty(exports, 'addMetaDataProvider', {
+  enumerable: true,
+  get: function get() {
+    return _metaDataProvider.addMetaDataProvider;
   }
 });
 
@@ -2812,6 +2841,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.addMetaDataProvider = exports.metaDataProvider = undefined;
 
 var _externalModules = __webpack_require__(0);
 
@@ -2933,9 +2963,13 @@ function metaDataProvider(type, imageId) {
   }
 }
 
-_externalModules.cornerstone.metaData.addProvider(metaDataProvider);
+function addMetaDataProvider(cs) {
+  // register our metadata provider
+  cs.metaData.addProvider(metaDataProvider);
+}
 
-exports.default = metaDataProvider;
+exports.metaDataProvider = metaDataProvider;
+exports.addMetaDataProvider = addMetaDataProvider;
 
 /***/ }),
 /* 49 */
@@ -2947,7 +2981,7 @@ exports.default = metaDataProvider;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.loadImage = exports.getLoaderForScheme = exports.loadImageFromPromise = undefined;
+exports.registerImageLoaders = exports.loadImage = exports.getLoaderForScheme = exports.loadImageFromPromise = undefined;
 
 var _externalModules = __webpack_require__(0);
 
@@ -3086,14 +3120,17 @@ function loadImage(imageId, options) {
   return loadImageFromPromise(dataSetPromise, imageId, parsedImageId.frame, parsedImageId.url, options);
 }
 
-// register dicomweb and wadouri image loader prefixes
-_externalModules.cornerstone.registerImageLoader('dicomweb', loadImage);
-_externalModules.cornerstone.registerImageLoader('wadouri', loadImage);
-_externalModules.cornerstone.registerImageLoader('dicomfile', loadImage);
+function registerImageLoaders(cs) {
+  // register dicomweb and wadouri image loader prefixes
+  cs.registerImageLoader('dicomweb', loadImage);
+  cs.registerImageLoader('wadouri', loadImage);
+  cs.registerImageLoader('dicomfile', loadImage);
+}
 
 exports.loadImageFromPromise = loadImageFromPromise;
 exports.getLoaderForScheme = getLoaderForScheme;
 exports.loadImage = loadImage;
+exports.registerImageLoaders = registerImageLoaders;
 
 /***/ }),
 /* 50 */
@@ -3147,7 +3184,13 @@ var _metaDataProvider = __webpack_require__(51);
 Object.defineProperty(exports, 'metaDataProvider', {
   enumerable: true,
   get: function get() {
-    return _interopRequireDefault(_metaDataProvider).default;
+    return _metaDataProvider.metaDataProvider;
+  }
+});
+Object.defineProperty(exports, 'addMetaDataProvider', {
+  enumerable: true,
+  get: function get() {
+    return _metaDataProvider.addMetaDataProvider;
   }
 });
 
@@ -3163,6 +3206,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.addMetaDataProvider = exports.metaDataProvider = undefined;
 
 var _externalModules = __webpack_require__(0);
 
@@ -3280,10 +3324,13 @@ function metaDataProvider(type, imageId) {
   }
 }
 
-// register our metadata provider
-_externalModules.cornerstone.metaData.addProvider(metaDataProvider);
+function addMetaDataProvider(cornerstone) {
+  // register our metadata provider
+  cornerstone.metaData.addProvider(metaDataProvider);
+}
 
-exports.default = metaDataProvider;
+exports.metaDataProvider = metaDataProvider;
+exports.addMetaDataProvider = addMetaDataProvider;
 
 /***/ }),
 /* 52 */,
@@ -3304,12 +3351,6 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_60__;
 /***/ (function(module, exports) {
 
 module.exports = __WEBPACK_EXTERNAL_MODULE_61__;
-
-/***/ }),
-/* 62 */
-/***/ (function(module, exports) {
-
-module.exports = __WEBPACK_EXTERNAL_MODULE_62__;
 
 /***/ })
 /******/ ]);

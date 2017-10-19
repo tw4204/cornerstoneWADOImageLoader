@@ -2,7 +2,8 @@ import { getImagePixelModule,
          getLUTs,
          getModalityLUTOutputPixelRepresentation,
          getNumberValues,
-         metaDataProvider } from './metaData/index.js';
+         metaDataProvider,
+         addMetaDataProvider } from './metaData/index.js';
 
 import dataSetCacheManager from './dataSetCacheManager.js';
 import fileManager from './fileManager.js';
@@ -10,6 +11,7 @@ import getEncapsulatedImageFrame from './getEncapsulatedImageFrame.js';
 import getUncompressedImageFrame from './getUncompressedImageFrame.js';
 import loadFileRequest from './loadFileRequest.js';
 import { loadImageFromPromise,
+         registerImageLoaders,
          getLoaderForScheme,
          loadImage } from './loadImage.js';
 import parseImageId from './parseImageId.js';
@@ -23,7 +25,7 @@ const metaData = {
   metaDataProvider
 };
 
-export default {
+export {
   metaData,
   dataSetCacheManager,
   fileManager,
@@ -34,5 +36,7 @@ export default {
   getLoaderForScheme,
   loadImage,
   parseImageId,
-  unpackBinaryFrame
+  unpackBinaryFrame,
+  registerImageLoaders,
+  addMetaDataProvider
 };
